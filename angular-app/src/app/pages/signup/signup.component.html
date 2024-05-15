@@ -1,0 +1,148 @@
+<form [formGroup]="registerFormData">
+  <div class="regForm">
+    <h1>Regisztáció</h1>
+    <hr />
+    <h5>Felhasználói adatok</h5>
+    <div class="name">
+      <mat-form-field>
+        <mat-label>Vezetéknév</mat-label>
+        <input
+          matInput
+          placeholder="Vezetéknév"
+          formControlName="lastname"
+          required
+        />
+        @if (lastname.invalid) {
+        <mat-error>Hiányzó vezetéknév!</mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field>
+        <mat-label>Keresztnév</mat-label>
+        <input
+          matInput
+          placeholder="Keresztnév"
+          formControlName="firstname"
+          required
+        />
+        @if (firstname.invalid) {
+        <mat-error>Hiányzó keresztnév!</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Telefonszám</mat-label>
+      <input
+        matInput
+        placeholder="+36309999999"
+        formControlName="phonenumber"
+        required
+      />
+      @if (phonenumber.invalid) {
+      <mat-error>Hiányzó telefonszám!</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Email cím</mat-label>
+      <input
+        matInput
+        placeholder="pat@example.com"
+        formControlName="email"
+        required
+      />
+      @if (email.invalid) {
+      <mat-error>Hibás Email!</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Jelszó</mat-label>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        formControlName="password"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      @if (password.invalid) {
+      <mat-error>Hiányzó jelszó!</mat-error>
+      }
+    </mat-form-field>
+    <hr />
+
+    <h5>Milyen fókot szeretne regisztrálni?</h5>
+    <mat-radio-group
+      formControlName="role"
+      aria-label="Select an option"
+      (change)="onRoleChange($event)"
+    >
+      <mat-radio-button value="1">Admin</mat-radio-button>
+      <mat-radio-button value="2">Oktató</mat-radio-button>
+      <mat-radio-button value="3">Diák</mat-radio-button>
+    </mat-radio-group>
+    <hr />
+
+    <div class="role" *ngIf="selectedRole === '1'">
+      <h6>Adja meg az iskolája nevét</h6>
+      <mat-form-field>
+        <mat-label>Iskola neve</mat-label>
+        <input
+          matInput
+          placeholder="Iskola"
+          formControlName="schoolname"
+          required
+        />
+        @if (schoolname.invalid) {
+        <mat-error>Hiányzó iskola!</mat-error>
+        }
+      </mat-form-field>
+    </div>
+
+    <div class="role" *ngIf="selectedRole === '2'">
+      <h6>Adja meg az iskolája nevét</h6>
+      <mat-form-field>
+        <mat-label>Iskola</mat-label>
+        <select formControlName="schoolname" matNativeControl required>
+          <option value="1">Iskola1</option>
+        </select>
+      </mat-form-field>
+    </div>
+
+    <div class="role" *ngIf="selectedRole === '3'">
+      <h6>Adja meg az oktatója nevét</h6>
+      <mat-form-field>
+        <mat-label>Oktató</mat-label>
+        <select formControlName="teacher" matNativeControl required="">
+          <option value="1">Oktató1</option>
+        </select>
+      </mat-form-field>
+    </div>
+
+    <button
+      id="registarton-btn"
+      type="button"
+      class="btn btn-success"
+      (click)="onSubmit()"
+    >
+      Regisztáció
+    </button>
+    <hr />
+    <button
+      id="logIn-btn"
+      type="button"
+      class="btn btn-danger"
+      (click)="navigateToLogin()"
+    >
+      Vissza
+    </button>
+  </div>
+</form>

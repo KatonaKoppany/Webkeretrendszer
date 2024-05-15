@@ -1,0 +1,57 @@
+<form [formGroup]="loginFormData">
+  <div class="loginForm">
+    <img src="../../../assets/LOGOarnyek.png" />
+    <mat-form-field>
+      <mat-label>Email cím</mat-label>
+      <input
+        matInput
+        placeholder="pat@example.com"
+        formControlName="email"
+        required
+      />
+      @if (email.invalid) {
+      <mat-error>Hibás Email!</mat-error>
+      }
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Jelszó</mat-label>
+      <input
+        matInput
+        [type]="hide ? 'password' : 'text'"
+        formControlName="password"
+        required
+      />
+      <button
+        mat-icon-button
+        matSuffix
+        (click)="hide = !hide"
+        [attr.aria-label]="'Hide password'"
+        [attr.aria-pressed]="hide"
+      >
+        <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
+      </button>
+      @if (password.invalid) {
+      <mat-error>Hiányzó jelszó!</mat-error>
+      }
+    </mat-form-field>
+
+    <button
+      id="logIn-btn"
+      type="button"
+      class="btn btn-primary"
+      (click)="onSubmit()"
+    >
+      Bejelentkezés
+    </button>
+    <hr />
+    <button
+      id="registarton-btn"
+      type="button"
+      class="btn btn-success"
+      (click)="navigateToReg()"
+    >
+      Regisztáció
+    </button>
+  </div>
+</form>
