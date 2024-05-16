@@ -4,7 +4,7 @@ import { AngularFireAuth } from '@angular/fire/compat/auth';
 @Injectable({
   providedIn: 'root',
 })
-export class AuthServicesService {
+export class AuthService {
   constructor(private auth: AngularFireAuth) {}
 
   login(email: string, password: string) {

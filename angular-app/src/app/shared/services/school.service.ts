@@ -5,7 +5,7 @@ import { School } from '../models/School';
 @Injectable({
   providedIn: 'root',
 })
-export class SchoolServicesService {
+export class SchoolService {
   collectionName = 'schools';
 
   constructor(private afs: AngularFirestore) {}
@@ -16,6 +16,13 @@ export class SchoolServicesService {
 
   getAll() {
     return this.afs.collection<School>(this.collectionName).valueChanges();
+  }
+
+  getOne(id: string) {
+    return this.afs
+      .collection<School>(this.collectionName)
+      .doc(id)
+      .valueChanges();
   }
 
   update(id: string, school: School) {
@@ -32,5 +39,13 @@ export class SchoolServicesService {
         ref.where('admin_ID', '==', id)
       )
       .valueChanges();
+  }
+
+  getSchoolIdByName(name: string) {
+    return this.afs
+      .collection<School>(this.collectionName, (ref) =>
+        ref.where('name', '==', name)
+      )
+      .snapshotChanges();
   }
 }

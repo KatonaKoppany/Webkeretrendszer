@@ -5,7 +5,7 @@ import { User } from '../models/User';
 @Injectable({
   providedIn: 'root',
 })
-export class UserServiceService {
+export class UserService {
   collectionName = 'users';
 
   constructor(private afs: AngularFirestore) {}
