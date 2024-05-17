@@ -1,1 +1,9 @@
-<router-outlet></router-outlet>
+<div class="container">
+  @if (isLoggedIn) {
+  <app-menu></app-menu>
+  }
+
+  <main>
+    <router-outlet></router-outlet>
+  </main>
+</div>

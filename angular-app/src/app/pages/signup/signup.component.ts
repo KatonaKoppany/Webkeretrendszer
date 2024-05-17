@@ -1,34 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from '../../shared/models/User';
-import { AuthServicesService } from '../../shared/services/auth-services.service';
-import { UserServiceService } from '../../shared/services/user-service.service';
-import { SchoolServicesService } from '../../shared/services/school-services.service';
+
+import { UserService } from '../../shared/services/user.service';
 import { School } from '../../shared/models/School';
+import { SchoolService } from '../../shared/services/school.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { first } from 'rxjs';
+import { TeacherStudentService } from '../../shared/services/teacher-student.service';
+import { TeacherStudent } from '../../shared/models/TeacherStudent';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css',
 })
-export class SignupComponent {
-  firstname = new FormControl('', Validators.required);
-  lastname = new FormControl('', Validators.required);
-  email = new FormControl('', [Validators.required, Validators.email]);
-  password = new FormControl('', Validators.required);
-  schoolname = new FormControl('', Validators.required);
-  phonenumber = new FormControl('', Validators.required);
-  hide = true;
-  alert = true;
-
-  constructor(
-    private router: Router,
-    private auth: AuthServicesService,
-    private user: UserServiceService,
-    private school: SchoolServicesService
-  ) {}
-
+export class SignupComponent implements OnInit {
   registerFormData = new FormGroup({
     firstname: new FormControl('', Validators.required),
     lastname: new FormControl('', Validators.required),
@@ -40,21 +28,45 @@ export class SignupComponent {
     teacher: new FormControl(''),
   });
 
+  schools: School[] = [];
+  teachers: any[] = [];
+
+  hide = true;
+  alert = true;
+
+  constructor(
+    private router: Router,
+    private auth: AuthService,
+    private user: UserService,
+    private school: SchoolService,
+    private teacherstudent: TeacherStudentService
+  ) {}
+
+  ngOnInit(): void {
+    this.school.getAll().subscribe((res) => {
+      this.schools = res;
+    });
+
+    this.user.getByRole('2').subscribe((res) => {
+      this.teachers = res;
+    });
+  }
+
   async onSubmit() {
     if (this.registerFormData.valid) {
       const formdata = this.registerFormData.value;
-      const user: User = {
-        firstname: <string>formdata.firstname,
-        lastname: <string>formdata.lastname,
-        email: <string>formdata.email,
-        password: <string>formdata.password,
-        phonenumber: <string>formdata.phonenumber,
-        role: <string>formdata.role,
-      };
-
       this.auth
-        .signup(user.email as string, user.password as string)
+        .signup(formdata.email as string, formdata.password as string)
         .then((cred) => {
+          const user: User = {
+            id: <string>cred.user?.uid,
+            firstname: <string>formdata.firstname,
+            lastname: <string>formdata.lastname,
+            email: <string>formdata.email,
+            password: <string>formdata.password,
+            phonenumber: <string>formdata.phonenumber,
+            role: <string>formdata.role,
+          };
           this.user
             .create(cred.user?.uid as string, user as User)
             .then((res) => {
@@ -64,21 +76,64 @@ export class SignupComponent {
                   name: <string>formdata.schoolname,
                   user_IDs: [],
                 };
-                //TODO: ha a felhasználó belép irányítsa át
-                this.school.create(school);
+                this.school.create(school).then((res) => {
+                  //TODO átirányítás admin
+                  console.log('admin');
+                  console.log(res);
+                });
               }
               if (formdata.role == '2') {
-                //TODO: oktató reg
-              } else {
-                //TODO: diák reg
+                this.school
+                  .getSchoolIdByName(formdata.schoolname as string)
+                  .pipe(first())
+                  .subscribe((res) => {
+                    const id = res[0].payload.doc.id;
+                    this.school
+                      .getOne(res[0].payload.doc.id)
+                      .pipe(first())
+                      .subscribe((res) => {
+                        res?.user_IDs.push(<string>cred.user?.uid);
+                        this.school
+                          .update(id as string, res as School)
+                          .then(() => {
+                            const teacherstudent: TeacherStudent = {
+                              teacher_ID: id,
+                              student_IDs: [],
+                            };
+                            this.teacherstudent.create(
+                              teacherstudent as TeacherStudent
+                            );
+                            //TODO átirányítás oktató
+                          });
+                      });
+                  });
+              }
+              if (formdata.role == '3') {
+                this.teacherstudent
+                  .getIdByTeacherId(formdata.teacher as string)
+                  .pipe(first())
+                  .subscribe((res) => {
+                    const id = res[0].payload.doc.id;
+                    this.teacherstudent
+                      .getOne(id as string)
+                      .pipe(first())
+                      .subscribe((res) => {
+                        res?.student_IDs.push(<string>cred.user?.uid);
+                        this.teacherstudent
+                          .update(id as string, res as TeacherStudent)
+                          .then(() => {
+                            //TODO átirányítás diák
+                          });
+                      });
+                  });
               }
             });
         })
         .catch((error) => {
-          console.log(error);
+          console.error(error);
         });
     } else {
-      console.log('Nem valid' + this.registerFormData.value);
+      console.log('Hiba');
     }
   }
 

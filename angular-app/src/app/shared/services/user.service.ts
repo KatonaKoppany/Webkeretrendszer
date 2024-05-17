@@ -25,6 +25,14 @@ export class UserService {
       .valueChanges();
   }
 
+  getByRole(role: string) {
+    return this.afs
+      .collection<User>(this.collectionName, (ref) =>
+        ref.where('role', '==', role)
+      )
+      .valueChanges();
+  }
+
   update(id: string, user: User) {
     return this.afs.collection<User>(this.collectionName).doc(id).set(user);
   }

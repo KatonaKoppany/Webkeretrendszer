@@ -48,4 +48,12 @@ export class SchoolService {
       )
       .snapshotChanges();
   }
+
+  getSchoolByName(name: string) {
+    return this.afs
+      .collection<School>(this.collectionName, (ref) =>
+        ref.where('name', '==', name)
+      )
+      .valueChanges();
+  }
 }
