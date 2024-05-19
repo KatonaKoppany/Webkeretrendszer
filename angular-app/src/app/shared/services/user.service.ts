@@ -5,7 +5,7 @@ import { User } from '../models/User';
 @Injectable({
   providedIn: 'root',
 })
-export class UserServiceService {
+export class UserService {
   collectionName = 'users';
 
   constructor(private afs: AngularFirestore) {}
@@ -22,6 +22,14 @@ export class UserServiceService {
     return this.afs
       .collection<User>(this.collectionName)
       .doc(id)
+      .valueChanges();
+  }
+
+  getByRole(role: string) {
+    return this.afs
+      .collection<User>(this.collectionName, (ref) =>
+        ref.where('role', '==', role)
+      )
       .valueChanges();
   }
 

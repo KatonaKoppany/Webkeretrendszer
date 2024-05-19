@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthServicesService } from '../../shared/services/auth-services.service';
-import { UserServiceService } from '../../shared/services/user-service.service';
 import { User } from '../../shared/models/User';
+import { UserService } from '../../shared/services/user.service';
+import { AuthService } from '../../shared/services/auth.service';
+import { AlertService } from '../../shared/services/alert.service';
 
 @Component({
   selector: 'app-login',
@@ -14,12 +15,12 @@ export class LoginComponent {
   email = new FormControl('', [Validators.required, Validators.email]);
   password = new FormControl('', Validators.required);
   hide = true;
-  alert = true;
 
   constructor(
     private router: Router,
-    private auth: AuthServicesService,
-    private user: UserServiceService
+    private auth: AuthService,
+    private alert: AlertService,
+    private user: UserService
   ) {}
 
   loginFormData = new FormGroup({
@@ -34,12 +35,17 @@ export class LoginComponent {
       this.auth
         .login(email as string, password as string)
         .then((cred) => {
-          console.log(cred);
-          //TODO: ha a felhasználó belép irányítsa át
+          this.user.getById(cred.user?.uid as string).subscribe((res) => {
+            if (res?.role == '1') {
+              this.router.navigate(['/userlist']);
+            }
+          });
         })
         .catch((error) => {
-          console.log(error);
+          this.alert.alert('Hibás bejelentkezési adatok!', 'OK');
         });
+    } else {
+      this.alert.alert('Hibás bejelentkezési adatok!', 'OK');
     }
   }
 

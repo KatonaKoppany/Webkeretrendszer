@@ -1,0 +1,58 @@
+<h2 mat-dialog-title>
+  {{ data ? "Felhasználó módosítása" : "Felhasználó hozzáadása" }}
+</h2>
+<mat-dialog-content class="content">
+  <form [formGroup]="userForm">
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Kereszt név</mat-label>
+        <input matInput formControlName="firstname" />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Vezeték név</mat-label>
+        <input matInput formControlName="lastname" />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Telefonszám</mat-label>
+      <input matInput formControlName="phonenumber" />
+    </mat-form-field>
+  </form>
+  <!--
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" />
+    </mat-form-field>
+    
+  <form *ngIf="teacher" [formGroup]="carForm">
+    <mat-form-field>
+      <mat-label>Rendszám tábla</mat-label>
+      <input matInput formControlName="license_plate_number" />
+    </mat-form-field>
+    <mat-form-field>
+      <mat-label>Kilóméter</mat-label>
+      <input matInput formControlName="total_km" />
+    </mat-form-field>
+  </form>
+
+  
+  <form *ngIf="student" [formGroup]="teacherForm">
+    <mat-form-field>
+      <mat-label>Oktató...</mat-label>
+      <mat-select formControlName="teacher_ID">
+        <mat-option *ngFor="let teacher of teachers" [value]="teacher.ID"
+          >{{ teacher.first_name }} {{ teacher.last_name }}</mat-option
+        >
+      </mat-select>
+    </mat-form-field>
+  </form>-->
+</mat-dialog-content>
+<mat-dialog-actions class="">
+  <button mat-button [mat-dialog-close]="false">Mégsem</button>
+  <button (click)="onFormSubmit()" mat-button color="primary">
+    {{ data ? "Módosít" : "Felvesz" }}
+  </button>
+</mat-dialog-actions>

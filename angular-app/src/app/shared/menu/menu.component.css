@@ -1,0 +1,32 @@
+nav {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  padding: 0;
+  margin: 0;
+  background-color: #2a7bc4;
+  border-radius: 0px 0px 10px 10px;
+}
+
+.navbar-nav :last-child {
+  justify-content: end;
+}
+
+a {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+}
+
+li {
+  transition: 0.4s ease;
+}
+
+li:hover {
+  background-color: #174761;
+  border-radius: 3px;
+}
+
+li:hover > a {
+  color: whitesmoke;
+}

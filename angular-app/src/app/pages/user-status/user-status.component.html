@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>Felhasználó törlése</h2>
+<mat-dialog-content class="content">
+  <form [formGroup]="userForm">
+    <div class="row">
+      <mat-form-field>
+        <mat-label>Kereszt név</mat-label>
+        <input matInput formControlName="firstname" readonly />
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Vezeték név</mat-label>
+        <input matInput formControlName="lastname" readonly />
+      </mat-form-field>
+    </div>
+
+    <mat-form-field>
+      <mat-label>Email</mat-label>
+      <input matInput formControlName="email" readonly />
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions class="">
+  <button mat-button [mat-dialog-close]="false">Mégsem</button>
+  <button
+    *ngIf="data.userData.status === 'active'"
+    (click)="onFormSubmit()"
+    mat-button
+    color="warn"
+  >
+    Tiltás
+  </button>
+
+  <button
+    *ngIf="data.userData.status === 'disabled'"
+    (click)="onFormSubmit()"
+    mat-button
+    ngClass="success"
+  >
+    Visszaállítás
+  </button>
+</mat-dialog-actions>

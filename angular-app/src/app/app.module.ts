@@ -14,8 +14,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { RouterModule, Routes } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
@@ -24,17 +29,38 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { LoginComponent } from './pages/login/login.component';
 import { SignupComponent } from './pages/signup/signup.component';
+import { MenuComponent } from './shared/menu/menu.component';
+import { UserListComponent } from './pages/user-list/user-list.component';
+import { UserAddEditComponent } from './pages/user-add-edit/user-add-edit.component';
+import { UserStatusComponent } from './pages/user-status/user-status.component';
 
 const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'signup', component: SignupComponent },
   { path: '', redirectTo: '/login', pathMatch: 'full' },
+  { path: 'userlist', component: UserListComponent },
 ];
 
-const firebaseConfig = {};
+const firebaseConfig = {
+  apiKey: 'AIzaSyAeSslXMv0SFH20wVZOibYjlD43B4c8Yds',
+  authDomain: 'webkeretrendszer-a1e66.firebaseapp.com',
+  projectId: 'webkeretrendszer-a1e66',
+  storageBucket: 'webkeretrendszer-a1e66.appspot.com',
+  messagingSenderId: '700163287152',
+  appId: '1:700163287152:web:b10f661dcca183f695ecb5',
+};
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, SignupComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    SignupComponent,
+    MenuComponent,
+    UserListComponent,
+    UserAddEditComponent,
+    UserListComponent,
+    UserStatusComponent,
+  ],
   imports: [
     //FireBase
     AngularFireModule.initializeApp(firebaseConfig),
@@ -52,8 +78,13 @@ const firebaseConfig = {};
     ReactiveFormsModule,
     MatIconModule,
     MatButtonModule,
-    MatStepperModule,
+    MatSelectModule,
     MatRadioModule,
+    MatSnackBarModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
 
     BrowserModule,
     AppRoutingModule,

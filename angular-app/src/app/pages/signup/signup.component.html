@@ -12,7 +12,7 @@
           formControlName="lastname"
           required
         />
-        @if (lastname.invalid) {
+        @if (!registerFormData.get('lastname')?.dirty){
         <mat-error>Hiányzó vezetéknév!</mat-error>
         }
       </mat-form-field>
@@ -24,7 +24,7 @@
           formControlName="firstname"
           required
         />
-        @if (firstname.invalid) {
+        @if (!registerFormData.get('firstname')?.dirty){
         <mat-error>Hiányzó keresztnév!</mat-error>
         }
       </mat-form-field>
@@ -38,7 +38,7 @@
         formControlName="phonenumber"
         required
       />
-      @if (phonenumber.invalid) {
+      @if (!registerFormData.get('phonenumber')?.dirty){
       <mat-error>Hiányzó telefonszám!</mat-error>
       }
     </mat-form-field>
@@ -51,7 +51,7 @@
         formControlName="email"
         required
       />
-      @if (email.invalid) {
+      @if (!registerFormData.get('email')?.dirty){
       <mat-error>Hibás Email!</mat-error>
       }
     </mat-form-field>
@@ -73,7 +73,7 @@
       >
         <mat-icon>{{ hide ? "visibility_off" : "visibility" }}</mat-icon>
       </button>
-      @if (password.invalid) {
+      @if (!registerFormData.get('password')?.dirty) {
       <mat-error>Hiányzó jelszó!</mat-error>
       }
     </mat-form-field>
@@ -91,6 +91,7 @@
     </mat-radio-group>
     <hr />
 
+    <!--Admin role-->
     <div class="role" *ngIf="selectedRole === '1'">
       <h6>Adja meg az iskolája nevét</h6>
       <mat-form-field>
@@ -101,29 +102,59 @@
           formControlName="schoolname"
           required
         />
-        @if (schoolname.invalid) {
+        @if (!registerFormData.get('schoolname')?.dirty){
         <mat-error>Hiányzó iskola!</mat-error>
         }
       </mat-form-field>
     </div>
 
+    <!--Teacher role-->
     <div class="role" *ngIf="selectedRole === '2'">
       <h6>Adja meg az iskolája nevét</h6>
       <mat-form-field>
         <mat-label>Iskola</mat-label>
-        <select formControlName="schoolname" matNativeControl required>
-          <option value="1">Iskola1</option>
-        </select>
+        <mat-select formControlName="schoolname">
+          <mat-option *ngFor="let school of schools" [value]="school.name">{{
+            school.name
+          }}</mat-option>
+        </mat-select>
+        @if (!registerFormData.get('schoolname')?.valid){
+        <mat-error>Hiányzó iskola!</mat-error>
+        }
       </mat-form-field>
     </div>
 
+    <!--Student role-->
     <div class="role" *ngIf="selectedRole === '3'">
+      <h6>Adja meg az iskolája nevét</h6>
+      <mat-form-field>
+        <mat-label>Iskola</mat-label>
+        <mat-select
+          formControlName="schoolname"
+          (selectionChange)="selectedTeacher($event)"
+        >
+          <mat-option
+            *ngFor="let school of schools"
+            [value]="school.admin_ID"
+            >{{ school.name }}</mat-option
+          >
+        </mat-select>
+        @if (!registerFormData.get('schoolname')?.valid){
+        <mat-error>Hiányzó iskola!</mat-error>
+        }
+      </mat-form-field>
+
       <h6>Adja meg az oktatója nevét</h6>
       <mat-form-field>
-        <mat-label>Oktató</mat-label>
-        <select formControlName="teacher" matNativeControl required="">
-          <option value="1">Oktató1</option>
-        </select>
+        <mat-label>Select</mat-label>
+        <mat-select formControlName="teacher">
+          <mat-option *ngFor="let teacher of teachers" [value]="teacher.id">{{
+            teacher.lastname + " " + teacher.firstname
+          }}</mat-option>
+        </mat-select>
+        @if (!registerFormData.get('teacher')?.valid){
+        <mat-error>Hiányzó oktató!</mat-error>
+        }
       </mat-form-field>
     </div>
 
