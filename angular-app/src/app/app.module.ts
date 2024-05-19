@@ -41,14 +41,7 @@ const routes: Routes = [
   { path: 'userlist', component: UserListComponent },
 ];
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAeSslXMv0SFH20wVZOibYjlD43B4c8Yds',
-  authDomain: 'webkeretrendszer-a1e66.firebaseapp.com',
-  projectId: 'webkeretrendszer-a1e66',
-  storageBucket: 'webkeretrendszer-a1e66.appspot.com',
-  messagingSenderId: '700163287152',
-  appId: '1:700163287152:web:b10f661dcca183f695ecb5',
-};
+const firebaseConfig = {};
 
 @NgModule({
   declarations: [
