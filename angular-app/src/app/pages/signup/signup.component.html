@@ -126,6 +126,24 @@
 
     <!--Student role-->
     <div class="role" *ngIf="selectedRole === '3'">
+      <h6>Adja meg az iskolája nevét</h6>
+      <mat-form-field>
+        <mat-label>Iskola</mat-label>
+        <mat-select
+          formControlName="schoolname"
+          (selectionChange)="selectedTeacher($event)"
+        >
+          <mat-option
+            *ngFor="let school of schools"
+            [value]="school.admin_ID"
+            >{{ school.name }}</mat-option
+          >
+        </mat-select>
+        @if (!registerFormData.get('schoolname')?.valid){
+        <mat-error>Hiányzó iskola!</mat-error>
+        }
+      </mat-form-field>
+
       <h6>Adja meg az oktatója nevét</h6>
       <mat-form-field>
         <mat-label>Select</mat-label>

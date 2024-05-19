@@ -41,10 +41,26 @@ export class SchoolService {
       .valueChanges();
   }
 
+  getSchoolsById(id: string) {
+    return this.afs
+      .collection<School>(this.collectionName, (ref) =>
+        ref.where('admin_ID', '==', id)
+      )
+      .valueChanges();
+  }
+
   getSchoolIdByName(name: string) {
     return this.afs
       .collection<School>(this.collectionName, (ref) =>
         ref.where('name', '==', name)
+      )
+      .snapshotChanges();
+  }
+
+  getSchoolIdByAdminId(id: string) {
+    return this.afs
+      .collection<School>(this.collectionName, (ref) =>
+        ref.where('admin_ID', '==', id)
       )
       .snapshotChanges();
   }

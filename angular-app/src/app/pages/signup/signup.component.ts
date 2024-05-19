@@ -46,17 +46,13 @@ export class SignupComponent implements OnInit {
     this.school.getAll().subscribe((res) => {
       this.schools = res;
     });
-
-    this.user.getByRole('2').subscribe((res) => {
-      this.teachers = res;
-    });
   }
 
   async onSubmit() {
     if (this.registerFormData.valid) {
       const formdata = this.registerFormData.value;
       this.auth
-        .signup(formdata.email as string, formdata.password as string)
+        .create(formdata.email as string, formdata.password as string)
         .then((cred) => {
           const user: User = {
             id: <string>cred.user?.uid,
@@ -66,6 +62,7 @@ export class SignupComponent implements OnInit {
             password: <string>formdata.password,
             phonenumber: <string>formdata.phonenumber,
             role: <string>formdata.role,
+            status: 'active',
           };
           this.user
             .create(cred.user?.uid as string, user as User)
@@ -109,20 +106,38 @@ export class SignupComponent implements OnInit {
                   });
               }
               if (formdata.role == '3') {
-                this.teacherstudent
-                  .getIdByTeacherId(formdata.teacher as string)
+                this.school
+                  .getSchoolIdByAdminId(formdata.schoolname as string)
                   .pipe(first())
                   .subscribe((res) => {
+                    console.log(res);
+
                     const id = res[0].payload.doc.id;
-                    this.teacherstudent
-                      .getOne(id as string)
+
+                    this.school
+                      .getOne(res[0].payload.doc.id)
                       .pipe(first())
                       .subscribe((res) => {
-                        res?.student_IDs.push(<string>cred.user?.uid);
-                        this.teacherstudent
-                          .update(id as string, res as TeacherStudent)
+                        res?.user_IDs.push(<string>cred.user?.uid);
+                        this.school
+                          .update(id as string, res as School)
                           .then(() => {
-                            //TODO átirányítás diák
+                            this.teacherstudent
+                              .getById(formdata.teacher as string)
+                              .pipe(first())
+                              .subscribe((res) => {
+                                res[0]?.student_IDs.push(
+                                  <string>cred.user?.uid
+                                );
+                                this.teacherstudent
+                                  .update(
+                                    id as string,
+                                    res[0] as TeacherStudent
+                                  )
+                                  .then(() => {
+                                    //TODO átirányítás diák
+                                  });
+                              });
                           });
                       });
                   });
@@ -144,5 +159,22 @@ export class SignupComponent implements OnInit {
 
   navigateToLogin() {
     this.router.navigate(['/login']);
+  }
+
+  selectedTeacher(event: any) {
+    const id = event.value;
+    this.school
+      .getSchoolsByAdminId(id as string)
+      .pipe(first())
+      .subscribe((res) => {
+        const schoolUsers = res[0].user_IDs;
+
+        this.user.getAll().subscribe((res) => {
+          const data = res.filter((teacher) =>
+            schoolUsers.includes(teacher.id)
+          );
+          this.teachers = data;
+        });
+      });
   }
 }

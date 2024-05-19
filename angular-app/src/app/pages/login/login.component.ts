@@ -19,7 +19,8 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private auth: AuthService,
-    private alert: AlertService
+    private alert: AlertService,
+    private user: UserService
   ) {}
 
   loginFormData = new FormGroup({
@@ -34,7 +35,11 @@ export class LoginComponent {
       this.auth
         .login(email as string, password as string)
         .then((cred) => {
-          //TODO: átirányítás a kezdőlapra
+          this.user.getById(cred.user?.uid as string).subscribe((res) => {
+            if (res?.role == '1') {
+              this.router.navigate(['/userlist']);
+            }
+          });
         })
         .catch((error) => {
           this.alert.alert('Hibás bejelentkezési adatok!', 'OK');

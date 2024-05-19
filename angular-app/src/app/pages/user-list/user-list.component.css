@@ -1,0 +1,23 @@
+table th {
+  font-weight: bold;
+  background-color: #2a7bc4;
+}
+
+.action {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 10px;
+}
+
+.table-container {
+  max-height: 600px;
+  overflow-y: auto;
+}
+
+.paginator mat-paginator {
+  font-size: 12px;
+  border-radius: 0px 0px 10px 10px;
+  font-weight: bold;
+  background-color: #2a7bc4;
+}
